@@ -15,8 +15,11 @@ code {
 .filters__container {
   max-width: 80%;
   padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
-.MuiFormControl-root.filters__monetization, .MuiFormControl-root.filters__priceRange {
+.MuiFormControl-root.filters__monetization, .MuiFormControl-root.filters__priceRange, .filters__niches {
   margin-right: 16px;
 }

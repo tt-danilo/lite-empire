@@ -1,7 +1,9 @@
 import React, { useReducer, createContext, useContext }  from 'react';
 
 const initialState = {
-  state: {},
+  state: {
+    isLoading: false
+  },
   dispatch: () => {}
 };
   
@@ -12,9 +14,15 @@ const initialState = {
     const [state, dispatch] = useReducer((state: any, action: any) => {
       switch(action.type) {
         case 'Set__Listings':
-          console.log('test1', action.data)
-          state = action.data
-          return action.data
+          return {
+            ...state,
+            ...action.data
+          }
+        case 'Set__Loading':
+          return {
+            ...state,
+            isLoading: !state?.isLoading
+          }
         default:
           throw new Error();
       };

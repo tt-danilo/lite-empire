@@ -7,13 +7,47 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
+import { useURLGenerator } from '../helpers/useURLGenerator'
+import { convertNumberToPrice } from '../helpers/converters'
+import { useGlobalContext } from '../providers/stateProvider' 
 import { MonetizationList} from '../data/filters'
 
 export default function Filters(){
+  const globalState = useGlobalContext()
+  const { dispatch } = globalState;
   const [activeMonetization, setActiveMonetization] = useState<Array<string>>([])
   const [priceRange, setPriceRange] = React.useState<Array<number>>([0, 7520000]);
+  const [niches, setNiches] = React.useState<string>('');
 
+  const url = useURLGenerator({
+    monetization: activeMonetization,
+    priceRange: priceRange
+  })
+  
+  function setFilterData() {
+    dispatch({
+      type: 'Set__Loading',
+    })
+
+    fetch(url)
+      .then(response => response.json())
+      .then(({data}) => {
+        dispatch({
+          type: 'Set__Listings',
+          data: {
+            listings: data?.listings
+          }
+        })
+
+        dispatch({
+          type: 'Set__Loading',
+        })
+      })
+  }
+  
   const handleMonetizationChange = (event: React.ChangeEvent<{
     name?: string | undefined;
     value: unknown;
@@ -27,7 +61,7 @@ export default function Filters(){
   };
 
   function valuetext(value: number) {
-    return `${value}°C`;
+    return convertNumberToPrice(value);
   }
   
   
@@ -78,6 +112,14 @@ export default function Filters(){
           }}
         />
       </FormControl>
+
+      <TextField className='filters__niches' label="Niches" value={niches} onChange={e => setNiches(e.target.value)} />
+
+      <Button variant="contained" color="primary"
+      onClick={() => setFilterData()}
+      >
+        Apply
+      </Button>
     </div>
   )
 }

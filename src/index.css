@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.filters__container {
+  max-width: 80%;
+  padding: 16px;
+}
+
+.MuiFormControl-root.filters__monetization, .MuiFormControl-root.filters__priceRange {
+  margin-right: 16px;
+}

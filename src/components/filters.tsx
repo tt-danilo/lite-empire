@@ -10,21 +10,24 @@ import Slider from '@material-ui/core/Slider';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-import { useURLGenerator } from '../helpers/useURLGenerator'
+import { urlGenerator } from '../helpers/urlGenerator'
 import { convertNumberToPrice } from '../helpers/converters'
 import { useGlobalContext } from '../providers/stateProvider' 
 import { MonetizationList} from '../data/filters'
 
 export default function Filters(){
   const globalState = useGlobalContext()
-  const { dispatch } = globalState;
+  const { dispatch, state } = globalState;
+  const page = state.pages
   const [activeMonetization, setActiveMonetization] = useState<Array<string>>([])
   const [priceRange, setPriceRange] = React.useState<Array<number>>([0, 7520000]);
   const [niches, setNiches] = React.useState<string>('');
 
-  const url = useURLGenerator({
+  const url = urlGenerator({
     monetization: activeMonetization,
-    priceRange: priceRange
+    priceRange: priceRange,
+    niches: niches,
+    page
   })
   
   function setFilterData() {
@@ -38,7 +41,10 @@ export default function Filters(){
         dispatch({
           type: 'Set__Listings',
           data: {
-            listings: data?.listings
+            listings: data?.listings,
+            monetization: activeMonetization,
+            priceRange: priceRange,
+            niches: niches
           }
         })
 

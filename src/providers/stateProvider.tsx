@@ -2,7 +2,8 @@ import React, { useReducer, createContext, useContext }  from 'react';
 
 const initialState = {
   state: {
-    isLoading: false
+    isLoading: false,
+    currentPage: 1,
   },
   dispatch: () => {}
 };

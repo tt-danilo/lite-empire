@@ -3,7 +3,6 @@ import React, { useReducer, createContext, useContext }  from 'react';
 const initialState = {
   state: {
     isLoading: false,
-    currentPage: 1,
   },
   dispatch: () => {}
 };
@@ -15,6 +14,7 @@ const initialState = {
     const [state, dispatch] = useReducer((state: any, action: any) => {
       switch(action.type) {
         case 'Set__Listings':
+          console.log('action.data',action.data)
           return {
             ...state,
             ...action.data

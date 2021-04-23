@@ -15,21 +15,24 @@ export default function Listings(){
     const globalState = useGlobalContext()
   const { dispatch, state } = globalState;
   const listings = state.listings as Array<any>
-  const monetization = state.monetization
-  const priceRange = state.priceRange
-  const niches = state.niches
-  const currentPage = state.page
+  const {
+    monetization,
+    priceRange,
+    niches,
+    currentPage,
+  } = state
+  const rowsPerPage = state.limit
   const totalPages = state.count
 
-  function fetchFilteredData(url: string, data?: any){
+  function fetchFilteredData(url: string, pageData?: any){
     fetch(url)
       .then(response => response.json())
       .then(({data}) => {
         dispatch({
           type: 'Set__Listings',
           data: {
+            ...pageData,
             listings: data?.listings,
-            ...data
           }
         })
 
@@ -40,6 +43,7 @@ export default function Listings(){
   }
   
   const handleChangePage = (event: any, page: number) => {
+    console.log('handle', page)
     dispatch({
       type: 'Set__Loading',
     })
@@ -48,14 +52,15 @@ export default function Listings(){
       monetization,
       priceRange,
       niches,
-      page: page,
+      page: page + 1,
       limit: state.limit
     })
 
     fetchFilteredData(url, {
-      currentPage: page
+      currentPage: page + 1
     })
   };
+
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -72,7 +77,8 @@ export default function Listings(){
     })
 
     fetchFilteredData(url, {
-      limit: newLimit
+      limit: newLimit,
+      currentPage: 1,
     })
   };
   
@@ -107,13 +113,13 @@ export default function Listings(){
       </TableContainer>
       <TablePagination
           component="div"
-          count={totalPages || 0}
-          rowsPerPage={20}
-          page={currentPage || 1}
-          onChangePage={handleChangePage}
-          rowsPerPageOptions={[20,50,100]}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+        count={totalPages || 0}
+        rowsPerPage={rowsPerPage}
+        page={currentPage - 1}
+        onChangePage={handleChangePage}
+        rowsPerPageOptions={[20,50,100]}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
     </Paper>
   )
 }
